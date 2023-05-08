@@ -5,7 +5,7 @@ import cartReducer from "./Cart";
 
 const Store = configureStore({
     reducer: {
-        toggle: toggleReducer,
+        ui: toggleReducer,
         cart : cartReducer,
         
     }

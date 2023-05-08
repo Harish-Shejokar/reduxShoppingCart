@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialCartState = { cartVisible: false };
+const initialCartState = { cartVisible: false ,notification:null};
 
 const toggleSlice = createSlice({
   name: "toggle",
@@ -10,9 +10,16 @@ const toggleSlice = createSlice({
       state.cartVisible = !state.cartVisible;
     //   console.log(state.cartVisible);
     },
+    showNotification(state, action) {
+      state.notification = {
+        status: action.payload.status,
+        title: action.payload.title,
+        message: action.payload.message
+      };
+    }
   },
 });
 
-export const toggleAction = toggleSlice.actions;
+export const uiAction = toggleSlice.actions;
 
 export default toggleSlice.reducer;

@@ -29,7 +29,7 @@ const cartSlice = createSlice({
     removeItemFromCart(state, action) {
       const Id = action.payload;
         const existingItem = state.cartItems.find((item) => {
-            console.log(Id, item.id);
+            // console.log(Id, item.id);
             return Id === item.id
         })
        
