@@ -5,70 +5,39 @@ import "./App.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import Notification from "./components/Notification/Notification";
-import { uiAction } from "./ReduxStore/UI";
+import { sendCartData,fetchCartData } from "./ReduxStore/Cart-Action";
+
+
+
+
 let isIntial = true;
+
 
 const App = () => {
   const dispatch = useDispatch();
   const showCart = useSelector((state) => state.ui.cartVisible);
-  const CartItems = useSelector((state) => state.cart.cartItems);
+  const CartItems = useSelector((state) => state.cart);
   const notification = useSelector((state) => state.ui.notification);
 
 
   useEffect(() => {
-     if (isIntial) {
-       isIntial = false;
-       return;
-     } 
-    dispatch(
-      uiAction.showNotification({
-        status: "pending",
-        title: "Sending",
-        message: "Sending Cart data!!",
-      })
-    );
-    const putRequest = async () => {
-      
-      try {
-        const response = await fetch(
-          "https://expense-data-11e4b-default-rtdb.firebaseio.com/Cart.json",
-          {
-            method: "PUT",
-            body: JSON.stringify(CartItems),
-          }
-        );
+    dispatch(fetchCartData());
+  },[dispatch])
 
-            if (response.ok) {
-          console.log("put ok");
-          const data = await response.json();
-          // console.log(data);
-          dispatch(
-            uiAction.showNotification({
-              status: "success",
-              title: "Success",
-              message: "Sending Cart data successfull !!",
-            })
-          );
-        } else {
-          console.log("put not ok");
-        }
-      } catch (error) {
-        console.log(error);
-        dispatch(
-          uiAction.showNotification({
-            status: "error",
-            title: "Error",
-            message: "Sending Cart data FAiled !!",
-          })
-        );
-      }
-    };
-    putRequest();
+
+  useEffect(() => {
+    if (isIntial) {
+      isIntial = false;
+      return;
+    } 
+    if(CartItems.changed)dispatch(sendCartData({ cartItems: CartItems.cartItems, totalQuantity :CartItems.totalQuantity}));
+    
   }, [CartItems, dispatch]);
 
   return (
     <div className="backgroundColor">
-      {notification && (
+      
+      { notification && (
         <Notification
           title={notification.title}
           message={notification.message}
